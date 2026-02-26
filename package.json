@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Job Opportunity Tracking System</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+        color: white;
+      }
+
+      header {
+        background: #111;
+        padding: 15px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .container {
+        padding: 20px;
+      }
+
+      select,
+      input,
+      button {
+        padding: 8px;
+        margin: 5px;
+        border-radius: 5px;
+        border: none;
+      }
+
+      button {
+        background: #ff9800;
+        color: white;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #e68900;
+      }
+
+      .card {
+        background: white;
+        color: black;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      #loginPage {
+        text-align: center;
+        margin-top: 120px;
+      }
+
+      #mainPage {
+        display: none;
+      }
+
+      .popup {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #ff4444;
+        padding: 15px;
+        border-radius: 8px;
+        color: white;
+        font-weight: bold;
+        animation: fade 5s forwards;
+        z-index: 1000;
+      }
+
+      @keyframes fade {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      .status {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <header>Job Opportunity Tracking System</header>
+
+    <!-- LOGIN PAGE -->
+    <div id="loginPage">
+      <h2>Login with Email</h2>
+      <input type="email" id="email" placeholder="Enter Email" />
+      <button onclick="login()">Login</button>
+    </div>
+
+    <!-- MAIN PAGE -->
+    <div id="mainPage" class="container">
+      <h3>Select Field</h3>
+      <select id="fieldSelect" onchange="filterJobs()">
+        <option value="">-- Select Field --</option>
+        <option>IT</option>
+        <option>Frontend</option>
+        <option>Backend</option>
+        <option>Data Science</option>
+        <option>Data Analysis</option>
+        <option>Electrical</option>
+        <option>Electronics</option>
+        <option>Architecture</option>
+        <option>Mechanical</option>
+      </select>
+
+      <div id="jobList"></div>
+
+      <h3>Applied Jobs</h3>
+      <div id="appliedList"></div>
+    </div>
+
+    <script>
+      let jobs = [
+        {
+          field: "IT",
+          company: "TCS",
+          details: "Leading IT service company in India",
+          work: "Full Stack Developer",
+          salary: "₹4-8 LPA",
+          location: "Pan India",
+        },
+        {
+          field: "Frontend",
+          company: "Infosys",
+          details: "Global IT and consulting leader",
+          work: "React Developer",
+          salary: "₹5-9 LPA",
+          location: "India",
+        },
+        {
+          field: "Backend",
+          company: "Wipro",
+          details: "Enterprise technology services",
+          work: "NodeJS Developer",
+          salary: "₹6-10 LPA",
+          location: "India",
+        },
+        {
+          field: "Data Science",
+          company: "Accenture",
+          details: "AI & ML transformation company",
+          work: "Machine Learning Engineer",
+          salary: "₹8-15 LPA",
+          location: "India",
+        },
+        {
+          field: "Data Analysis",
+          company: "Capgemini",
+          details: "Data driven business solutions",
+          work: "Data Analyst",
+          salary: "₹5-8 LPA",
+          location: "India",
+        },
+        {
+          field: "Electrical",
+          company: "ABB",
+          details: "Power and automation technologies",
+          work: "Power Systems Engineer",
+          salary: "₹6-12 LPA",
+          location: "India",
+        },
+        {
+          field: "Electronics",
+          company: "Bosch",
+          details: "Embedded & automotive electronics",
+          work: "Embedded Engineer",
+          salary: "₹7-13 LPA",
+          location: "India",
+        },
+        {
+          field: "Architecture",
+          company: "L&T Construction",
+          details: "Infrastructure and building projects",
+          work: "Site Architect",
+          salary: "₹5-10 LPA",
+          location: "India",
+        },
+        {
+          field: "Mechanical",
+          company: "Tata Motors",
+          details: "Automobile manufacturing company",
+          work: "Design Engineer",
+          salary: "₹6-11 LPA",
+          location: "India",
+        },
+      ];
+
+      let applied = [];
+
+      function login() {
+        let email = document.getElementById("email").value;
+        if (email == "") {
+          alert("Please enter Email");
+          return;
+        }
+        document.getElementById("loginPage").style.display = "none";
+        document.getElementById("mainPage").style.display = "block";
+        showPopup("✅ Login Successful! Explore Latest Vacancies");
+      }
+
+      function showPopup(message) {
+        let pop = document.createElement("div");
+        pop.className = "popup";
+        pop.innerText = message;
+        document.body.appendChild(pop);
+        setTimeout(() => {
+          pop.remove();
+        }, 5000);
+      }
+
+      function filterJobs() {
+        let selected = document.getElementById("fieldSelect").value;
+        let jobDiv = document.getElementById("jobList");
+        jobDiv.innerHTML = "";
+
+        if (selected == "") return;
+
+        showPopup("🔥 New Vacancies Open in " + selected + " Field!");
+
+        jobs.forEach((job, index) => {
+          if (job.field == selected) {
+            jobDiv.innerHTML += `
+<div class="card">
+<h3>${job.company}</h3>
+<p><b>Field:</b> ${job.field}</p>
+<p><b>About Company:</b> ${job.details}</p>
+<p><b>Job Role:</b> ${job.work}</p>
+<p><b>Salary:</b> ${job.salary}</p>
+<p><b>Location:</b> ${job.location}</p>
+<button onclick="applyJob(${index})">Apply</button>
+</div>`;
+          }
+        });
+      }
+
+      function applyJob(index) {
+        let statusOptions = ["Accepted", "Rejected", "Interview on 28th March"];
+        let randomStatus =
+          statusOptions[Math.floor(Math.random() * statusOptions.length)];
+        applied.push({ ...jobs[index], status: randomStatus });
+        displayApplied();
+        showPopup("📩 Application Submitted to " + jobs[index].company);
+      }
+
+      function displayApplied() {
+        let appliedDiv = document.getElementById("appliedList");
+        appliedDiv.innerHTML = "";
+        applied.forEach((job, i) => {
+          appliedDiv.innerHTML += `
+<div class="card">
+<h3>${job.company}</h3>
+<p><b>Role:</b> ${job.work}</p>
+<p><b>Salary:</b> ${job.salary}</p>
+<p class="status">Status: ${job.status}</p>
+<button onclick="deleteApplication(${i})">Delete</button>
+</div>`;
+        });
+      }
+
+      function deleteApplication(i) {
+        showPopup("❌ Application Removed");
+        applied.splice(i, 1);
+        displayApplied();
+      }
+    </script>
+  </body>
+</html>
